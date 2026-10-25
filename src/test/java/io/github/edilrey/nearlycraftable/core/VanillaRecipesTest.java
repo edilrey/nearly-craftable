@@ -73,10 +73,17 @@ class VanillaRecipesTest {
     }
 
     @Test
-    void mixedPlankTypesSatisfyTagSlotsOnlyPerStack() {
+    void mixedPlankTypesFillOneTagSlot() {
         Inventory inv = new Inventory().add(OAK_PLANKS, 2).add(BIRCH_PLANKS, 1).add(STICK, 2);
-        MatchResult pickaxe = Matcher.match(inv, RECIPES, 1, 3, 200).stream()
-                .filter(r -> r.recipe().id().equals("minecraft:wooden_pickaxe")).findFirst().orElseThrow();
-        assertEquals(1, pickaxe.missingCount());
+        assertTrue(!ids(Matcher.match(inv, RECIPES, 1, 3, 200)).contains("minecraft:wooden_pickaxe"),
+                "2 oak + 1 birch planks and 2 sticks craft a wooden pickaxe");
+    }
+
+    @Test
+    void mixedPlankTypesCountTowardsAPartialMatch() {
+        Inventory inv = new Inventory().add(OAK_PLANKS, 2).add(BIRCH_PLANKS, 1);
+        MatchResult table = Matcher.match(inv, RECIPES, 1, 3, 200).stream()
+                .filter(r -> r.recipe().id().equals("minecraft:crafting_table")).findFirst().orElseThrow();
+        assertEquals(1, table.missingCount());
     }
 }

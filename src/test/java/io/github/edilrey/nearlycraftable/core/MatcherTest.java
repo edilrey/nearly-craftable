@@ -109,6 +109,22 @@ class MatcherTest {
         assertEquals(1, Matcher.match(inv, recipes, 1, 5, 1).size());
     }
 
+    @Test
+    void tagSlotCombinesDifferentItems() {
+        RecipeInput table = recipe("table", slot(4, OAK, BIRCH));
+        assertEquals(0, Matcher.matchOne(new Inventory().add(OAK, 2).add(BIRCH, 2), table).missingCount());
+        MatchResult r = Matcher.matchOne(new Inventory().add(OAK, 1).add(BIRCH, 2), table);
+        assertEquals(3, r.matched());
+        assertEquals(1, r.missing().get(0).amount());
+    }
+
+    @Test
+    void combinedTagSlotDoesNotReuseItemsTakenByEarlierSlot() {
+        Inventory inv = new Inventory().add(OAK, 1).add(BIRCH, 2);
+        MatchResult r = run(inv, 2, recipe("r", slot(1, OAK), slot(3, OAK, BIRCH))).get(0);
+        assertEquals(1, r.missingCount());
+    }
+
     /** Known limit of the greedy method. Slot 1 takes Y first, so slot 2 finds nothing. */
     @Test
     void knownGreedyLimitWithOverlappingTags() {

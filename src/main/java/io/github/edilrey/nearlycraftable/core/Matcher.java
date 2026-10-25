@@ -36,28 +36,31 @@ public final class Matcher {
         int missingTotal = 0;
         for (RecipeInput.Slot slot : slots) {
             ItemKey full = null;
-            ItemKey best = null;
-            int bestCount = 0;
             for (ItemKey key : slot.allowed()) {
-                int have = left.getOrDefault(key, 0);
-                if (have >= slot.amount()) {
+                if (left.getOrDefault(key, 0) >= slot.amount()) {
                     full = key;
                     break;
-                }
-                if (have > bestCount) {
-                    best = key;
-                    bestCount = have;
                 }
             }
             if (full != null) {
                 left.merge(full, -slot.amount(), Integer::sum);
-            } else {
-                if (best != null) {
-                    left.merge(best, -bestCount, Integer::sum);
+                continue;
+            }
+            // No single item is enough. Each grid cell is separate, so different allowed items can be combined.
+            int need = slot.amount();
+            for (ItemKey key : slot.allowed()) {
+                int take = Math.min(need, left.getOrDefault(key, 0));
+                if (take > 0) {
+                    left.merge(key, -take, Integer::sum);
+                    need -= take;
+                    if (need == 0) {
+                        break;
+                    }
                 }
-                int lack = slot.amount() - bestCount;
-                missing.merge(slot.allowed(), lack, Integer::sum);
-                missingTotal += lack;
+            }
+            if (need > 0) {
+                missing.merge(slot.allowed(), need, Integer::sum);
+                missingTotal += need;
             }
         }
         List<MatchResult.Missing> grouped = new ArrayList<>();

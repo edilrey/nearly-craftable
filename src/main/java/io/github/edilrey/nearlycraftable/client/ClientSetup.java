@@ -59,8 +59,12 @@ public final class ClientSetup {
             }
         }
 
+        /**
+         * Post only fires when the screen did not use the key, so text boxes that keep focus on their own
+         * (recipe book search, creative search) still get the letter.
+         */
         @SubscribeEvent
-        public static void onScreenKey(ScreenEvent.KeyPressed.Pre event) {
+        public static void onScreenKey(ScreenEvent.KeyPressed.Post event) {
             Screen screen = event.getScreen();
             if (!(screen instanceof AbstractContainerScreen<?>) || !OPEN_KEY.matches(event.getKeyCode(), event.getScanCode())) {
                 return;

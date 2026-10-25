@@ -1,5 +1,6 @@
 package io.github.edilrey.nearlycraftable.core;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public final class Inventory {
     }
 
     public Map<ItemKey, Integer> counts() {
-        return counts;
+        return Collections.unmodifiableMap(counts);
     }
 
     public Inventory copy() {

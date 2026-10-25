@@ -2,6 +2,7 @@ package io.github.edilrey.nearlycraftable.client;
 
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.EmiRecipeManager;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import io.github.edilrey.nearlycraftable.NearlyCraftable;
@@ -16,20 +17,23 @@ import java.util.Set;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
+/**
+ * Converts EMI recipes for the matcher. EMI swaps in a new recipe manager on each reload (an empty one while
+ * the reload runs), so the cache is keyed on the manager instance.
+ */
 public final class RecipeSource {
     private static List<RecipeInput> cache;
+    private static EmiRecipeManager cachedManager;
     private static Set<String> cachedCategories;
 
     private RecipeSource() {
     }
 
-    public static synchronized void clear() {
-        cache = null;
-    }
-
     public static synchronized List<RecipeInput> get(Set<String> categoryIds) {
-        if (cache == null || !categoryIds.equals(cachedCategories)) {
-            cache = convertAll(categoryIds);
+        EmiRecipeManager manager = EmiApi.getRecipeManager();
+        if (cache == null || manager != cachedManager || !categoryIds.equals(cachedCategories)) {
+            cache = List.copyOf(convertAll(manager, categoryIds));
+            cachedManager = manager;
             cachedCategories = Set.copyOf(categoryIds);
         }
         return cache;
@@ -39,10 +43,10 @@ public final class RecipeSource {
         return ItemKey.of(BuiltInRegistries.ITEM.getKey(item).toString());
     }
 
-    private static List<RecipeInput> convertAll(Set<String> categoryIds) {
+    private static List<RecipeInput> convertAll(EmiRecipeManager manager, Set<String> categoryIds) {
         long start = System.nanoTime();
         List<RecipeInput> converted = new ArrayList<>();
-        List<EmiRecipe> recipes = EmiApi.getRecipeManager().getRecipes();
+        List<EmiRecipe> recipes = manager.getRecipes();
         for (EmiRecipe recipe : recipes) {
             if (!categoryIds.contains(String.valueOf(recipe.getCategory().getId()))) {
                 continue;

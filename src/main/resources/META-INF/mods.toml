@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
+issueTrackerURL="https://github.com/edilrey/nearly-craftable/issues"
 clientSideOnly=true
 
 [[mods]]
@@ -10,6 +11,7 @@ displayName="${mod_name}"
 authors="${mod_authors}"
 description='''${mod_description}'''
 displayTest="IGNORE_ALL_VERSION"
+logoFile="logo.png"
 
 [[dependencies.${mod_id}]]
     modId="forge"

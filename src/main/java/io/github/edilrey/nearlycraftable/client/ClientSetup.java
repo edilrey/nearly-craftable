@@ -2,7 +2,7 @@ package io.github.edilrey.nearlycraftable.client;
 
 import com.mojang.brigadier.Command;
 import io.github.edilrey.nearlycraftable.NearlyCraftable;
-import java.util.Set;
+import io.github.edilrey.nearlycraftable.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -20,12 +20,12 @@ public final class ClientSetup {
     public static void onClientCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("nearlycraftable")
                 .then(Commands.literal("recipes").executes(ctx -> {
-                    int count = RecipeSource.get(Set.of("emi:crafting")).size();
+                    int count = RecipeSource.get(ClientConfig.categories()).size();
                     ctx.getSource().sendSuccess(() -> Component.literal("Nearly Craftable: " + count + " recipes"), false);
                     return Command.SINGLE_SUCCESS;
                 }))
                 .then(Commands.literal("results").executes(ctx -> {
-                    int count = ResultCache.get(Minecraft.getInstance().player, Set.of("emi:crafting"), 1, 2, 200).size();
+                    int count = ResultCache.get(Minecraft.getInstance().player).size();
                     ctx.getSource().sendSuccess(() -> Component.literal("Nearly Craftable: " + count + " results"), false);
                     return Command.SINGLE_SUCCESS;
                 })));

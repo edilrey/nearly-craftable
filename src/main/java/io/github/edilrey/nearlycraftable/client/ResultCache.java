@@ -1,6 +1,7 @@
 package io.github.edilrey.nearlycraftable.client;
 
 import io.github.edilrey.nearlycraftable.NearlyCraftable;
+import io.github.edilrey.nearlycraftable.config.ClientConfig;
 import io.github.edilrey.nearlycraftable.core.Inventory;
 import io.github.edilrey.nearlycraftable.core.MatchResult;
 import io.github.edilrey.nearlycraftable.core.Matcher;
@@ -20,7 +21,12 @@ public final class ResultCache {
     private ResultCache() {
     }
 
-    public static synchronized List<MatchResult> get(Player player, Set<String> categories,
+    public static List<MatchResult> get(Player player) {
+        return get(player, ClientConfig.categories(), ClientConfig.MIN_MATCHED.get(),
+                ClientConfig.MAX_MISSING.get(), ClientConfig.MAX_RESULTS.get());
+    }
+
+    static synchronized List<MatchResult> get(Player player, Set<String> categories,
                                                      int minMatched, int maxMissing, int maxResults) {
         Inventory inventory = InventorySnapshot.capture(player);
         int hash = InventorySnapshot.hash(inventory);

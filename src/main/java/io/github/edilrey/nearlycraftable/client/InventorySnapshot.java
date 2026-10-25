@@ -20,10 +20,6 @@ public final class InventorySnapshot {
         return inventory;
     }
 
-    public static int hash(Inventory inventory) {
-        return inventory.counts().hashCode();
-    }
-
     private static void add(Inventory inventory, ItemStack stack) {
         if (!stack.isEmpty()) {
             inventory.add(RecipeSource.keyOf(stack.getItem()), stack.getCount());

@@ -1,0 +1,11 @@
+{
+  "key.categories.nearlycraftable": "Nearly Craftable",
+  "key.nearlycraftable.open": "Open recipe list",
+  "screen.nearlycraftable.title": "Nearly Craftable",
+  "screen.nearlycraftable.search": "Search by output name",
+  "screen.nearlycraftable.empty": "No results",
+  "screen.nearlycraftable.missing_header": "Missing:",
+  "screen.nearlycraftable.missing_line": "%sx %s",
+  "screen.nearlycraftable.missing_any": "%sx %s (or %s more)",
+  "screen.nearlycraftable.click_hint": "Click to open in EMI"
+}

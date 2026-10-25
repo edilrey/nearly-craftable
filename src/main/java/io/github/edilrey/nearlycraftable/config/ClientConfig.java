@@ -23,8 +23,8 @@ public final class ClientConfig {
                 .comment("Maximum number of recipes in the list.")
                 .defineInRange("maxResults", 200, 1, 5000);
         CATEGORIES = builder
-                .comment("EMI recipe category ids to search, for example \"emi:crafting\" or \"emi:smelting\".")
-                .defineListAllowEmpty("categories", List.of("emi:crafting"), o -> o instanceof String);
+                .comment("EMI recipe category ids to search, for example \"minecraft:crafting\" or \"minecraft:smelting\".")
+                .defineListAllowEmpty("categories", List.of("minecraft:crafting"), o -> o instanceof String);
         SPEC = builder.build();
     }
 
@@ -32,6 +32,9 @@ public final class ClientConfig {
     }
 
     public static Set<String> categories() {
-        return Set.copyOf(CATEGORIES.get());
+        // Early releases defaulted to "emi:crafting", but EMI's vanilla categories use the minecraft namespace.
+        return CATEGORIES.get().stream()
+                .map(id -> id.startsWith("emi:") ? "minecraft:" + id.substring(4) : id)
+                .collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
 }

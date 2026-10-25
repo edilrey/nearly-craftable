@@ -36,7 +36,7 @@ The file is `config/nearlycraftable-client.toml`. Restart the game after you cha
 | `maxMissing` | 2 | Maximum number of missing items for a recipe to be listed. |
 | `minMatched` | 1 | Minimum number of ingredient items that you already have. |
 | `maxResults` | 200 | Maximum number of recipes in the list. |
-| `categories` | `["emi:crafting"]` | EMI recipe category ids to search. |
+| `categories` | `["minecraft:crafting"]` | EMI recipe category ids to search. |
 
 ## Known limits
 

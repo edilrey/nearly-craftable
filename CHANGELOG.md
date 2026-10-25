@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fix the list always being empty: the default category is now `minecraft:crafting`, and old `emi:` ids in existing configs are converted.
+
 ## 0.1.1
 
 - Fix recipes that you can craft with mixed items for a tag (for example, oak and birch planks) showing as missing items.
